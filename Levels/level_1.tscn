@@ -1,0 +1,94 @@
+[gd_scene load_steps=11 format=3 uid="uid://cmimkm2w7vch6"]
+
+[ext_resource type="PackedScene" uid="uid://bu5vf1ln3jn4b" path="res://Levels/level.tscn" id="1_v422l"]
+[ext_resource type="PackedScene" uid="uid://djrf13eeqkpca" path="res://Elements/tile_map.tscn" id="2_tdbgi"]
+[ext_resource type="PackedScene" uid="uid://b5oo7mdhipdw3" path="res://Elements/spikes.tscn" id="2_xmbkg"]
+[ext_resource type="PackedScene" uid="uid://ct1fk8y027ciu" path="res://Characters/Enemies/walking_enemy.tscn" id="3_cn6a7"]
+[ext_resource type="PackedScene" uid="uid://ccmv51c0que3o" path="res://Characters/Enemies/moving_spike_enemy.tscn" id="4_edifa"]
+[ext_resource type="PackedScene" uid="uid://bou7o1pe205uk" path="res://Characters/Enemies/thwomp.tscn" id="5_cnupy"]
+[ext_resource type="PackedScene" uid="uid://c4h23y6x4yqx8" path="res://Elements/ladder.tscn" id="6_7hlfl"]
+[ext_resource type="PackedScene" uid="uid://ncgx67baw366" path="res://Elements/checkpoint.tscn" id="7_y30l6"]
+
+[sub_resource type="Curve2D" id="Curve2D_a3cc4"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -74, 29, 0, 0, 0, 0, -74, -30, 0, 0, 0, 0, -217, -30, 0, 0, 0, 0, -217, 30, 0, 0, 0, 0, -74, 29)
+}
+point_count = 5
+
+[sub_resource type="Curve2D" id="Curve2D_7ub36"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -40, 8, 0, 0, 0, 0, 28, 8)
+}
+point_count = 2
+
+[node name="Level1" instance=ExtResource("1_v422l")]
+
+[node name="TopLeft" parent="Camera2D/Limits" index="0"]
+position = Vector2(-204, -164)
+scale = Vector2(-379.91, 103.437)
+
+[node name="BottomRight" parent="Camera2D/Limits" index="1"]
+position = Vector2(213, 120)
+
+[node name="TileMap" parent="." index="3" instance=ExtResource("2_tdbgi")]
+
+[node name="Spikes" type="Node2D" parent="." index="4"]
+
+[node name="Spikes" parent="Spikes" index="0" instance=ExtResource("2_xmbkg")]
+position = Vector2(-27, 56)
+
+[node name="Spikes2" parent="Spikes" index="1" instance=ExtResource("2_xmbkg")]
+position = Vector2(-45, 56)
+
+[node name="Spikes3" parent="Spikes" index="2" instance=ExtResource("2_xmbkg")]
+position = Vector2(-9, 56)
+
+[node name="Enemies" type="Node2D" parent="." index="5"]
+
+[node name="WalkingEnemy" parent="Enemies" index="0" instance=ExtResource("3_cn6a7")]
+position = Vector2(246, 20)
+
+[node name="WalkingEnemy2" parent="Enemies" index="1" instance=ExtResource("3_cn6a7")]
+position = Vector2(184, 2)
+
+[node name="MovingSpikeEnemy" parent="Enemies" index="2" instance=ExtResource("4_edifa")]
+position = Vector2(0, -52)
+curve = SubResource("Curve2D_a3cc4")
+
+[node name="MovingSpikeEnemy2" parent="Enemies" index="3" instance=ExtResource("4_edifa")]
+position = Vector2(0, -85)
+curve = SubResource("Curve2D_7ub36")
+_moveSpeed = 2.0
+_animationType = 1
+
+[node name="Thwomp" parent="Enemies" index="4" instance=ExtResource("5_cnupy")]
+position = Vector2(128, -95)
+
+[node name="Thwomp2" parent="Enemies" index="5" instance=ExtResource("5_cnupy")]
+position = Vector2(-157, -106)
+
+[node name="Ladder" type="Node2D" parent="." index="6"]
+z_index = -1
+
+[node name="Ladder" parent="Ladder" index="0" instance=ExtResource("6_7hlfl")]
+position = Vector2(153, 27)
+
+[node name="Ladder2" parent="Ladder" index="1" instance=ExtResource("6_7hlfl")]
+position = Vector2(153, 9)
+
+[node name="Ladder3" parent="Ladder" index="2" instance=ExtResource("6_7hlfl")]
+position = Vector2(153, -9)
+
+[node name="Ladder4" parent="Ladder" index="3" instance=ExtResource("6_7hlfl")]
+position = Vector2(153, -27)
+
+[node name="Ladder5" parent="Ladder" index="4" instance=ExtResource("6_7hlfl")]
+position = Vector2(153, -45)
+
+[node name="Ladder6" parent="Ladder" index="5" instance=ExtResource("6_7hlfl")]
+position = Vector2(153, -63)
+
+[node name="Checkpoint" parent="." index="7" instance=ExtResource("7_y30l6")]
+position = Vector2(-97, -63)
+
+[editable path="Camera2D"]

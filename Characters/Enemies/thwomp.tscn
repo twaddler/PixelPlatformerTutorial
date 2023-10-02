@@ -1,0 +1,120 @@
+[gd_scene load_steps=17 format=3 uid="uid://bou7o1pe205uk"]
+
+[ext_resource type="Script" path="res://Characters/Enemies/Thwomp.cs" id="1_qimw3"]
+[ext_resource type="Texture2D" uid="uid://dc2l46apx1s3r" path="res://Assets/Art/Tilemap/characters_packed.png" id="1_u5pog"]
+[ext_resource type="Script" path="res://Overlaps/Hitbox.cs" id="2_ir0n2"]
+[ext_resource type="Script" path="res://Characters/StateMachine/CharacterStateMachine.cs" id="4_x373y"]
+[ext_resource type="Script" path="res://Characters/Enemies/ThwompStates/HoverState.cs" id="5_iwjla"]
+[ext_resource type="Script" path="res://Characters/Enemies/ThwompStates/FallState.cs" id="6_ql7ep"]
+[ext_resource type="Script" path="res://Characters/Enemies/ThwompStates/LandState.cs" id="7_0t6g3"]
+[ext_resource type="Script" path="res://Characters/Enemies/ThwompStates/RiseState.cs" id="8_8upw7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8qfi7"]
+atlas = ExtResource("1_u5pog")
+region = Rect2(120, 24, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iok2b"]
+atlas = ExtResource("1_u5pog")
+region = Rect2(96, 24, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dcqvw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8qfi7")
+}],
+"loop": true,
+"name": &"Falling",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iok2b")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h5ka1"]
+size = Vector2(18, 18.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_16ffp"]
+size = Vector2(16, 16)
+
+[sub_resource type="Gradient" id="Gradient_7i31f"]
+colors = PackedColorArray(0.758192, 0.758192, 0.758192, 0.858824, 0.662745, 0.662745, 0.662745, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xy3uv"]
+gradient = SubResource("Gradient_7i31f")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_mre7w"]
+lifetime_randomness = 0.42
+emission_shape = 3
+emission_box_extents = Vector3(9, 2, 0)
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+spread = 77.21
+gravity = Vector3(0, 2, 0)
+initial_velocity_min = 1.0
+initial_velocity_max = 15.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+angle_min = -477.5
+angle_max = 356.2
+scale_max = 2.0
+color = Color(0.717647, 0.717647, 0.717647, 0.635294)
+color_ramp = SubResource("GradientTexture1D_xy3uv")
+
+[node name="Thwomp" type="CharacterBody2D"]
+collision_layer = 0
+script = ExtResource("1_qimw3")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -9)
+sprite_frames = SubResource("SpriteFrames_dcqvw")
+animation = &"Idle"
+autoplay = "Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -9.25)
+shape = SubResource("RectangleShape2D_h5ka1")
+debug_color = Color(0.796078, 0.419608, 0.117647, 0.419608)
+
+[node name="Hitbox" type="Area2D" parent="."]
+position = Vector2(0, -9)
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("2_ir0n2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_16ffp")
+
+[node name="CharacterStateMachine" type="Node" parent="."]
+script = ExtResource("4_x373y")
+_initialStateName = "Hover"
+
+[node name="Hover" type="Node" parent="CharacterStateMachine" node_paths=PackedStringArray("_fallState")]
+script = ExtResource("5_iwjla")
+_fallState = NodePath("../Fall")
+
+[node name="Fall" type="Node" parent="CharacterStateMachine" node_paths=PackedStringArray("_landState")]
+script = ExtResource("6_ql7ep")
+_landState = NodePath("../Land")
+
+[node name="Land" type="Node" parent="CharacterStateMachine" node_paths=PackedStringArray("_riseState")]
+script = ExtResource("7_0t6g3")
+_riseState = NodePath("../Rise")
+
+[node name="Timer" type="Timer" parent="CharacterStateMachine/Land"]
+one_shot = true
+
+[node name="Rise" type="Node" parent="CharacterStateMachine" node_paths=PackedStringArray("_hoverState")]
+script = ExtResource("8_8upw7")
+_hoverState = NodePath("../Hover")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+emitting = false
+amount = 32
+process_material = SubResource("ParticleProcessMaterial_mre7w")
+explosiveness = 1.0

@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://bu5vf1ln3jn4b"]
+
+[ext_resource type="Script" path="res://Levels/Level.cs" id="1_0qyfw"]
+[ext_resource type="PackedScene" uid="uid://bh52cbn2iputk" path="res://Characters/Player/player.tscn" id="2_eh1jw"]
+[ext_resource type="PackedScene" uid="uid://jqtkjblrbxv3" path="res://UI/camera.tscn" id="3_fosn1"]
+
+[node name="Level" type="Node2D"]
+script = ExtResource("1_0qyfw")
+
+[node name="Player" parent="." instance=ExtResource("2_eh1jw")]
+z_index = 1
+position = Vector2(81, -38)
+
+[node name="Camera2D" parent="." instance=ExtResource("3_fosn1")]
+
+[node name="TopLeft" parent="Camera2D/Limits" index="0"]
+position = Vector2(-155, -143)
+
+[node name="SpawnTimer" type="Timer" parent="."]
+
+[editable path="Camera2D"]

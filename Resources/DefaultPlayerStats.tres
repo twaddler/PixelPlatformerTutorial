@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PlayerMovementStats" load_steps=2 format=3 uid="uid://cu71nvy0iljhk"]
+
+[ext_resource type="Script" path="res://Resources/PlayerMovementStats.cs" id="1_kc0fy"]
+
+[resource]
+script = ExtResource("1_kc0fy")
+Speed = 100.0
+Acceleration = 200.0
+Friction = 300.0
+JumpVelocity = -200.0
+MinimumJumpVelocity = -30.0
+Gravity = 490.0
+FastFallVelocity = 50.0

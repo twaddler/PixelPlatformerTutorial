@@ -1,0 +1,107 @@
+[gd_scene load_steps=13 format=3 uid="uid://bh52cbn2iputk"]
+
+[ext_resource type="Script" path="res://Characters/Player/Player.cs" id="1_rsjas"]
+[ext_resource type="Resource" uid="uid://cu71nvy0iljhk" path="res://Resources/DefaultPlayerStats.tres" id="2_a8jcx"]
+[ext_resource type="Texture2D" uid="uid://dc2l46apx1s3r" path="res://Assets/Art/Tilemap/characters_packed.png" id="2_bbhgp"]
+[ext_resource type="Script" path="res://Characters/StateMachine/CharacterStateMachine.cs" id="4_phf2u"]
+[ext_resource type="Script" path="res://Characters/Player/MoveState.cs" id="5_hf0x0"]
+[ext_resource type="Script" path="res://Characters/Player/ClimbState.cs" id="6_8c15l"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_16x2e"]
+atlas = ExtResource("2_bbhgp")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0wpwq"]
+atlas = ExtResource("2_bbhgp")
+region = Rect2(24, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p7t4w"]
+atlas = ExtResource("2_bbhgp")
+region = Rect2(24, 0, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d50gj"]
+atlas = ExtResource("2_bbhgp")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_4rvfe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_16x2e")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0wpwq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0wpwq")
+}],
+"loop": true,
+"name": &"Jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p7t4w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d50gj")
+}],
+"loop": true,
+"name": &"Run",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rt7d8"]
+size = Vector2(16, 17)
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_rsjas")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -12)
+sprite_frames = SubResource("SpriteFrames_4rvfe")
+animation = &"Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8.5)
+shape = SubResource("RectangleShape2D_rt7d8")
+
+[node name="LadderCheck" type="RayCast2D" parent="."]
+position = Vector2(0, -14)
+target_position = Vector2(0, 14)
+hit_from_inside = true
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="CharacterStateMachine" type="Node" parent="."]
+script = ExtResource("4_phf2u")
+_initialStateName = "Move"
+
+[node name="Move" type="Node" parent="CharacterStateMachine" node_paths=PackedStringArray("_climbState")]
+script = ExtResource("5_hf0x0")
+_climbState = NodePath("../Climb")
+_playerMovementStats = ExtResource("2_a8jcx")
+
+[node name="JumpBufferTimer" type="Timer" parent="CharacterStateMachine/Move"]
+wait_time = 0.1
+one_shot = true
+
+[node name="CoyoteJumpTimer" type="Timer" parent="CharacterStateMachine/Move"]
+wait_time = 0.1
+one_shot = true
+
+[node name="Climb" type="Node" parent="CharacterStateMachine" node_paths=PackedStringArray("_moveState")]
+script = ExtResource("6_8c15l")
+_climbSpeed = 50.0
+_moveState = NodePath("../Move")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -5.622
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="."]

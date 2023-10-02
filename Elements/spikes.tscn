@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5oo7mdhipdw3"]
+
+[ext_resource type="Texture2D" uid="uid://dwxhok0avlnjt" path="res://Assets/Art/Tilemap/tiles_packed.png" id="1_xlwr5"]
+[ext_resource type="Script" path="res://Overlaps/Hitbox.cs" id="2_fbvam"]
+
+[node name="Spikes" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0.200001, -9)
+texture = ExtResource("1_xlwr5")
+region_enabled = true
+region_rect = Rect2(144, 54, 18, 18)
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("2_fbvam")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox"]
+position = Vector2(0.200001, -9)
+polygon = PackedVector2Array(-7, 9, -7, 6, -5, 2, -3, 2, -1, 6, 1, 6, 3, 2, 5, 2, 7, 6, 7, 9)
